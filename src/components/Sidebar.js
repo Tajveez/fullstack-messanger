@@ -4,13 +4,20 @@ import Contacts from "./Contacts";
 import Conversations from "./Conversations";
 import NewContact from "./NewContact";
 import NewConversation from "./NewConversation";
-
 import Settings from "./Settings";
+
+const CONV_KEY = "conversations";
+const CONT_KEY = "contacts";
+const SETT_KEY = "settings";
+
 export default function Sidebar({ id }) {
-  const CONV_KEY = "conversations";
-  const CONT_KEY = "contacts";
-  const SETT_KEY = "settings";
   const [activeKey, setActiveKey] = useState(CONV_KEY);
+  const [modalOpen, setmodalOpen] = useState(false);
+
+  function closeModal() {
+    setmodalOpen(false);
+  }
+
   return (
     <div style={{ width: "350px" }} className="d-flex flex-column">
       <Tab.Container activeKey={activeKey} onSelect={setActiveKey}>
@@ -39,12 +46,16 @@ export default function Sidebar({ id }) {
         <div className="p-2 border-top border-right small">
           Your Id: <span className="text-muted">{id}</span>
         </div>
-        <Button className="rounded-0">
+        <Button className="rounded-0" onClick={() => setmodalOpen(true)}>
           New {activeKey === "conversations" ? "Conversation" : "Contact"}
         </Button>
       </Tab.Container>
-      <Modal>
-        {activeKey === "conversations" ? <NewConversation /> : <NewContact />}
+      <Modal show={modalOpen} onHide={closeModal}>
+        {activeKey === "conversations" ? (
+          <NewConversation closeModal={closeModal} />
+        ) : (
+          <NewContact closeModal={closeModal} />
+        )}
       </Modal>
     </div>
   );
