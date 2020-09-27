@@ -1,10 +1,19 @@
 import React from "react";
-import { Modal } from "react-bootstrap";
+import { Form, Modal, Button } from "react-bootstrap";
 
 export default function NewConversation() {
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
   return (
     <>
-      <Modal.Header closeButton>Create New Contact</Modal.Header>
+      <Modal.Header closeButton>Create New Conversation</Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group></Form.Group>
+          <Button>Submit</Button>
+        </Form>
+      </Modal.Body>
     </>
   );
 }
