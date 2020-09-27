@@ -1,11 +1,14 @@
 import React, { useRef } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
-export default function NewContact() {
+export default function NewContact({ closeModal }) {
   const idRef = useRef();
   const nameRef = useRef();
+
   function handleSubmit(e) {
     e.preventDefault();
+    // createContact(idRef.current.value, nameRef.current.value);
+    closeModal();
   }
   return (
     <>
@@ -20,7 +23,7 @@ export default function NewContact() {
             <Form.Label>Name</Form.Label>
             <Form.Control type="text" ref={nameRef} />
           </Form.Group>
-          <Button>Submit</Button>
+          <Button type="submit">Create</Button>
         </Form>
       </Modal.Body>
     </>
