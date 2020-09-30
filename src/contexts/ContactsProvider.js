@@ -7,7 +7,7 @@ export function useContacts() {
   return useContext(ContactsContext);
 }
 
-export function ContactsProvider({ childern }) {
+export function ContactsProvider({ children }) {
   const [contacts, setContacts] = useLocalStorage("contacts", []);
 
   function createContact(id, name) {
@@ -18,7 +18,7 @@ export function ContactsProvider({ childern }) {
   // https://youtu.be/tBr-PybP_9c?t=2387
   return (
     <ContactsContext.Provider value={{ contacts, createContact }}>
-      {childern}
+      {children}
     </ContactsContext.Provider>
   );
 }
