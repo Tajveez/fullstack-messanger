@@ -19,6 +19,8 @@ export default function NewConversation({ closeModal }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    // createConversation...
+    closeModal();
   }
 
   return (
