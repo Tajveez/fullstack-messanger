@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import { useContacts } from "../contexts/ContactsProvider";
 import { useConversations } from "../contexts/ConversationsProvider";
@@ -41,7 +41,7 @@ export default function NewConversation({ closeModal }) {
             </Form.Group>
           ))}
           <Form.Group></Form.Group>
-          <Button>Submit</Button>
+          <Button type="submit">Submit</Button>
         </Form>
       </Modal.Body>
     </>
