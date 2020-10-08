@@ -33,10 +33,11 @@ export function ConversationsProvider({ children }) {
     const selected = index === selectedConversationIndex;
     return { ...conversations, recipients, selected };
   });
+  console.log(selectedConversationIndex);
 
   const value = {
     conversations: formattedConversations,
-    selectedCoversation: formattedConversations[selectedConversationIndex],
+    selectedConversation: formattedConversations[selectedConversationIndex],
     selectConversationIndex: setSelectedConversationIndex,
     createConversation,
   };

@@ -14,7 +14,7 @@ export default function OpenConversation() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               style={{ height: "75px", resize: "none" }}
-              placeHolder="Enter Your Message Here."
+              placeholder="Enter Your Message Here."
             ></Form.Control>
           </InputGroup>
         </Form.Group>
