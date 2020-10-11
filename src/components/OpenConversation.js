@@ -11,6 +11,7 @@ export default function OpenConversation() {
       text
     );
     setText("");
+    // https://youtu.be/tBr-PybP_9c?t=4004
   }
   return (
     <div className="d-flex flex-column flex-grow-1">
