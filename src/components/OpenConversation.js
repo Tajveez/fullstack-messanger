@@ -7,6 +7,7 @@ export default function OpenConversation() {
     if (node) node.scrollIntoView({ smooth: true });
   }, []);
   const { sendMessage, selectedConversation } = useConversations();
+
   function handleSubmit(e) {
     e.preventDefault();
     sendMessage(
@@ -27,7 +28,9 @@ export default function OpenConversation() {
                 ref={lastMessage ? lastMessageRef : null}
                 key={index}
                 className={`my-1 d-flex flex-column ${
-                  message.fromMe ? "align-self-end" : ""
+                  message.fromMe
+                    ? "align-self-end align-items-end"
+                    : "align-items-start"
                 }`}
               >
                 <div

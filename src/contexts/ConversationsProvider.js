@@ -1,6 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { useContacts } from "./ContactsProvider";
+import { useSocket } from "./SocketProvider";
 
 const ConversationsContext = React.createContext();
 
@@ -15,6 +16,7 @@ export function ConversationsProvider({ id, children }) {
   );
   const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
   const { contacts } = useContacts();
+  const socket = useSocket();
 
   function createConversation(recipients) {
     setConversations((prevConversations) => {
@@ -22,31 +24,44 @@ export function ConversationsProvider({ id, children }) {
     });
   }
 
-  function addMessageToConversation({ recipients, text, sender }) {
-    setConversations((prevConversations) => {
-      let madeChange = false;
-      const newMessage = { sender, text, createdAt: Date() };
-      const newConversations = prevConversations.map((conversation) => {
-        if (arrayEqaulity(conversation.recipients, recipients)) {
-          madeChange = true;
-          return {
-            ...conversation,
-            messages: [...conversation.messages, newMessage],
-          };
+  const addMessageToConversation = useCallback(
+    ({ recipients, text, sender }) => {
+      setConversations((prevConversations) => {
+        let madeChange = false;
+        const newMessage = { sender, text, createdAt: Date() };
+        const newConversations = prevConversations.map((conversation) => {
+          if (arrayEquality(conversation.recipients, recipients)) {
+            madeChange = true;
+            return {
+              ...conversation,
+              messages: [...conversation.messages, newMessage],
+            };
+          }
+
+          return conversation;
+        });
+
+        if (madeChange) {
+          return newConversations;
+        } else {
+          return [...prevConversations, { recipients, messages: [newMessage] }];
         }
-
-        return conversation;
       });
+    },
+    [setConversations]
+  );
 
-      if (madeChange) {
-        return newConversations;
-      } else {
-        return [...prevConversations, { recipients, messages: [newMessage] }];
-      }
-    });
-  }
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("receive-message", addMessageToConversation);
+
+    return () => {
+      socket.off("receive-message");
+    };
+  }, [socket, addMessageToConversation]);
 
   function sendMessage(recipients, text) {
+    socket.emit("send-message", { recipients, text });
     addMessageToConversation({ recipients, text, sender: id });
   }
 
@@ -69,9 +84,9 @@ export function ConversationsProvider({ id, children }) {
     });
 
     const selected = index === selectedConversationIndex;
-    return { ...conversations, messages, recipients, selected };
+    return { ...conversation, messages, recipients, selected };
   });
-  console.log(selectedConversationIndex);
+  // console.log(selectedConversationIndex);
 
   const value = {
     conversations: formattedConversations,
@@ -87,7 +102,7 @@ export function ConversationsProvider({ id, children }) {
   );
 }
 
-function arrayEqaulity(a, b) {
+function arrayEquality(a, b) {
   if (a.length !== b.length) return false;
 
   a.sort();
