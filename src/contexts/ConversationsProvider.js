@@ -58,8 +58,18 @@ export function ConversationsProvider({ id, children }) {
       const name = (contact && contact.name) || recipient;
       return { id: recipient, name };
     });
+
+    const messages = conversation.messages.map((m) => {
+      const contact = contacts.find((contact) => {
+        return contact.id === m.sender;
+      });
+      const name = (contact && contact.name) || m.sender;
+      const fromMe = id === m.sender;
+      return { ...m, senderName: name, fromMe };
+    });
+
     const selected = index === selectedConversationIndex;
-    return { ...conversations, recipients, selected };
+    return { ...conversations, messages, recipients, selected };
   });
   console.log(selectedConversationIndex);
 
